@@ -582,11 +582,20 @@ const cellist = []; // almacenamiento de items
 
 for (let i = 0; i < items.length; i++) {
   const listameli = items[i];
+if (listameli.address.state_name = `Capital Federal`);
 
-  const formattedPrice = listameli.price.toLocaleString(); // Formatear el precio con separador de miles
 
+  const priceWithoutDecimals = Math.floor(listameli.price); // Eliminar decimales del precio
+  const formattedPrice = priceWithoutDecimals.toLocaleString('es-CO', {
+    style: 'currency',
+    currency: 'COP',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }); // Formatear el precio sin decimales con separador de miles y símbolo de moneda 
+
+  // template de elementos html
   const list = 
-  `<div class="container-sm container-md pt-3">
+  `<div class="container">
     <div class="d-flex flex-row align-items-center">
       <div class="col-1"><img src="${listameli.thumbnail}" id="image"></div>
 
@@ -597,9 +606,10 @@ for (let i = 0; i < items.length; i++) {
     </div>
   </div>`;
 
-  cellist.push(list);
+  cellist.push(list); //añade uno o más elementos al final de un array y devuelve la nueva longitud del array.
 }
 
-document.querySelector('#app').innerHTML = `<ul>${cellist.join('')}</ul>`;
+document.querySelector('#app').innerHTML = `<ul>${cellist.join('')}</ul>`;//inyectando el html mediante javascript
+
 
 
