@@ -1,0 +1,10 @@
+#image {
+  width: 150px;
+  height: auto;
+}
+
+.price {
+  font-size: 12px;
+  font-weight: 600;
+  font-style: italic;  
+}
