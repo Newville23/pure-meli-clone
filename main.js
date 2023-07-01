@@ -579,10 +579,14 @@ const items = [
 ];
 
 const cellist = []; // almacenamiento de items
+let  envio = "Envio Gratis"// crea una var para identificar el envio 
+
 
 for (let i = 0; i < items.length; i++) {
   const listameli = items[i];
-if (listameli.address.state_name = `Capital Federal`);
+if(listameli.shipping.free_shipping === true || listameli.shipping.free_shipping === false){
+envio = "Envio Pago"
+}
 
 
   const priceWithoutDecimals = Math.floor(listameli.price); // Eliminar decimales del precio
@@ -596,18 +600,26 @@ if (listameli.address.state_name = `Capital Federal`);
   // template de elementos html
   const list = 
   `<div class="container">
-    <div class="d-flex flex-row align-items-center">
-      <div class="col-1"><img src="${listameli.thumbnail}" id="image"></div>
+    <div >
+      <div class="col d-flex flex-row align-items-center"><img src="${listameli.thumbnail}" id="image">
+        
+        <div class="col">
+          <h4 class="price">${formattedPrice}</h4>
+          <p class="title">${listameli.title}</p>
+        </div>
 
-      <div class="col-11">
-        <h4 class="price">${formattedPrice}</h4>
-        <p class="title">${listameli.title}</p>
-      </div>  
+        <div class="col d-flex justify-content-end pe-4">
+          <p clas="">${listameli.address.state_name}</p>
+          <p>${envio}</p>
+        </div>  
+
+      </div>    
     </div>
   </div>`;
 
   cellist.push(list); //añade uno o más elementos al final de un array y devuelve la nueva longitud del array.
 }
+
 
 document.querySelector('#app').innerHTML = `<ul>${cellist.join('')}</ul>`;//inyectando el html mediante javascript
 
