@@ -621,6 +621,7 @@ envio = `<img src="../Assets/ic_shipping.png">`;
         </div>      
       </div>  
     </div>
+    <div><hr class="line"></hr></div>
   </div>`;
 
   cellist.push(list); //añade uno o más elementos al final de un array y devuelve la nueva longitud del array.
