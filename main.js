@@ -35,7 +35,7 @@ const items = [
       city_name: 'General Rodríguez',
     },
     shipping: {
-      free_shipping: true,
+      free_shipping: false,
       mode: 'me2',
       tags: ['mandatory_free_shipping'],
       logistic_type: 'drop_off',
@@ -417,7 +417,7 @@ const items = [
       city_name: 'Balvanera',
     },
     shipping: {
-      free_shipping: false,
+      free_shipping: true,
       mode: 'custom',
       tags: [],
       logistic_type: 'custom',
@@ -509,7 +509,7 @@ const items = [
       city_name: 'Once',
     },
     shipping: {
-      free_shipping: true,
+      free_shipping: false,
       mode: 'me2',
       tags: ['fulfillment', 'mandatory_free_shipping'],
       logistic_type: 'fulfillment',
@@ -579,13 +579,13 @@ const items = [
 ];
 
 const cellist = []; // almacenamiento de items
-let  envio = "Envio Gratis"// crea una var para identificar el envio 
-
 
 for (let i = 0; i < items.length; i++) {
   const listameli = items[i];
-if(listameli.shipping.free_shipping === true || listameli.shipping.free_shipping === false){
-envio = "Envio Pago"
+  let  envio = [] // crea una var para identificar el envio
+if(listameli.shipping.free_shipping){
+envio = `<img src="../Assets/ic_shipping.png">`;
+
 }
 
 
@@ -600,27 +600,31 @@ envio = "Envio Pago"
   // template de elementos html
   const list = 
   `<div class="container">
-    <div >
-      <div class="col d-flex flex-row align-items-center"><img src="${listameli.thumbnail}" id="image">
-        
+    <div class="col d-flex flex-row align-items-center pt-3"><img src="${listameli.thumbnail}" id="image">        
         <div class="col">
           <h4 class="price">${formattedPrice}</h4>
           <p class="title">${listameli.title}</p>
         </div>
 
         <div class="col d-flex justify-content-end pe-4">
-          <p clas="">${listameli.address.state_name}</p>
-          <p>${envio}</p>
-        </div>  
+          <p class="ps-2">${listameli.address.state_name}</p>
+          <p class="ps-2">${envio}</p>
+        </div>       
+      </div>
 
-      </div>    
+      <div class="row">
+        <div class="col d-flex justify-content-center">
+          <button class="btn btn-outline-info" id="tags">${listameli.tags[0]}</button>
+          <button class="btn btn-outline-info" id="tags">${listameli.tags[1]}</button>
+          <button class="btn btn-outline-info" id="tags">${listameli.tags[2]}</button>
+          <button class="btn btn-outline-info" id="tags">${listameli.tags[3]}</button>
+        </div>      
+      </div>  
     </div>
   </div>`;
 
   cellist.push(list); //añade uno o más elementos al final de un array y devuelve la nueva longitud del array.
 }
-
-
 document.querySelector('#app').innerHTML = `<ul>${cellist.join('')}</ul>`;//inyectando el html mediante javascript
 
 
