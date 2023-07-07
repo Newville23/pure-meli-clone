@@ -584,8 +584,12 @@ for (let i = 0; i < items.length; i++) {
   const listameli = items[i];
   let  envio = [] // crea una var para identificar el envio
 if(listameli.shipping.free_shipping){
-envio = `<img src="../Assets/ic_shipping.png">`;
+envio = `<a class="icon-link icon-link-hover" style="transform: translate3d(0, -.125rem, 0);" href="#">
+<img src="../Assets/ic_shipping.png"></a>`;
 
+for( let j = 0; j < listameli.tags.length; j++){
+  const etiquetas = listameli.tags[j];
+}
 }
 
 
@@ -601,12 +605,13 @@ envio = `<img src="../Assets/ic_shipping.png">`;
   const list = 
   `<div class="container">
     <div class="col d-flex flex-row align-items-center pt-3"><img src="${listameli.thumbnail}" id="image">        
-        <div class="col">
+        <div class="col">          
           <h4 class="price">${formattedPrice}</h4>
-          <p class="title">${listameli.title}</p>
+          <p class="title"><a class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="${listameli.permalink}">${listameli.title}</a></p>
         </div>
 
         <div class="col d-flex justify-content-end pe-4">
+          <p>Enviar a</p>
           <p class="ps-2">${listameli.address.state_name}</p>
           <p class="ps-2">${envio}</p>
         </div>       
