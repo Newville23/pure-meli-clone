@@ -10,7 +10,7 @@ const items = [
       real_estate_agency: false,
       tags: [],
     },
-    price: 19609,
+    price: 49609,
     currency_id: 'ARS',
     available_quantity: 1,
     sold_quantity: 1,
@@ -35,7 +35,7 @@ const items = [
       city_name: 'General Rodríguez',
     },
     shipping: {
-      free_shipping: false,
+      free_shipping: true,
       mode: 'me2',
       tags: ['mandatory_free_shipping'],
       logistic_type: 'drop_off',
@@ -392,7 +392,7 @@ const items = [
       real_estate_agency: false,
       tags: [],
     },
-    price: 17999,
+    price: 65999,
     currency_id: 'ARS',
     available_quantity: 100,
     sold_quantity: 0,
@@ -417,7 +417,7 @@ const items = [
       city_name: 'Balvanera',
     },
     shipping: {
-      free_shipping: true,
+      free_shipping: false,
       mode: 'custom',
       tags: [],
       logistic_type: 'custom',
@@ -484,7 +484,7 @@ const items = [
       real_estate_agency: false,
       tags: [],
     },
-    price: 14899,
+    price: 34899,
     currency_id: 'ARS',
     available_quantity: 1,
     sold_quantity: 0,
@@ -509,7 +509,7 @@ const items = [
       city_name: 'Once',
     },
     shipping: {
-      free_shipping: false,
+      free_shipping: true,
       mode: 'me2',
       tags: ['fulfillment', 'mandatory_free_shipping'],
       logistic_type: 'fulfillment',
@@ -578,60 +578,105 @@ const items = [
   },
 ];
 
-const cellist = []; // almacenamiento de items
+// Declarando la funcion
 
-for (let i = 0; i < items.length; i++) {
-  const listameli = items[i];
-  let  envio = [] // crea una var para identificar el envio
-if(listameli.shipping.free_shipping){
-envio = `<a class="icon-link icon-link-hover" style="transform: translate3d(0, -.125rem, 0);" href="#">
-<img src="../Assets/ic_shipping.png"></a>`;
+function getTags(tags) {
+  let tagList = [];
+  for (let j = 0; j < tags.length; j++) {
+    const tagContent = tags[j];
 
-for( let j = 0; j < listameli.tags.length; j++){
-  const etiquetas = listameli.tags[j];
+    //html Template
+    const tag = ` <button class="btn btn-outline-info" id="tags">
+                      ${tagContent}
+                  </button>`;
+
+    // Anadir el tag a la lista de tags
+    tagList.push(tag);
+  }
+  return tagList.join('');
 }
-}
+
+function getProductList(products) {
+  for (let i = 0; i < products.length; i++) {
+    const product = products[i];
+
+    // crea una var para identificar el envio
+    let envio = '';
+    let tagList = '';
+
+    if (product.shipping.free_shipping) {
+      envio = `
+            <a class="icon-link icon-link-hover" style="transform: translate3d(0, -.125rem, 0);" href="#">
+                <img src="../assets/ic_shipping.png">
+            </a>`;
+
+      tagList = getTags(product.tags);
+    }
 
 
-  const priceWithoutDecimals = Math.floor(listameli.price); // Eliminar decimales del precio
-  const formattedPrice = priceWithoutDecimals.toLocaleString('es-CO', {
-    style: 'currency',
-    currency: 'COP',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  }); // Formatear el precio sin decimales con separador de miles y símbolo de moneda 
+// Obtener el campo de búsqueda
+const searchInput = document.getElementById('busqueda');
 
-  // template de elementos html
-  const list = 
-  `<div class="container">
-    <div class="col d-flex flex-row align-items-center pt-3"><img src="${listameli.thumbnail}" id="image">        
-        <div class="col">          
-          <h4 class="price">${formattedPrice}</h4>
-          <p class="title"><a class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="${listameli.permalink}">${listameli.title}</a></p>
-        </div>
+// Agregar un evento de escucha al campo de búsqueda
+searchInput.addEventListener('input', function() {
+  // Obtener el valor del campo de búsqueda
+  const searchTerm = searchInput.value.toLowerCase();
 
-        <div class="col d-flex justify-content-end pe-4">
-          <p>Enviar a</p>
-          <p class="ps-2">${listameli.address.state_name}</p>
-          <p class="ps-2">${envio}</p>
-        </div>       
+  // Obtener todos los elementos que deben ser filtrados
+  const items = document.getElementsByClassName('price');
+
+  // Recorrer los elementos y mostrar solo aquellos con precios mayores a 50.000
+  for (let k = 0; k < items.price.length; k++) {
+    const item = items[k];
+    const price = parseFloat(item.dataset.price);
+
+    if (price > 50000) {
+      item.style.display = 'block'; // Mostrar el elemento
+    } else {
+      item.style.display = 'none'; // Ocultar el elemento
+    }
+  }
+});
+  
+
+    const priceWithoutDecimals = Math.floor(product.price); // Eliminar decimales del precio
+    const formattedPrice = priceWithoutDecimals.toLocaleString('es-CO', {
+      style: 'currency',
+      currency: 'COP',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }); // Formatear el precio sin decimales con separador de miles y símbolo de moneda
+
+    // template de elementos html
+    const item = `
+    
+    <div class="container">
+      <div class="col d-flex flex-row align-items-center pt-3">
+          <img src="${product.thumbnail}" id="image">        
+          <div class="col">          
+            <h4 class="price">${formattedPrice}</h4>
+            <p class="title">
+              <a class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="${product.permalink}">${product.title}</a>
+            </p>
+          </div>
+  
+          <div class="col d-flex justify-content-end pe-4">
+            <p>Enviar a</p>
+            <p class="ps-2">${product.address.state_name}</p>
+            <p class="ps-2">${envio}</p>
+          </div>       
       </div>
+  
+        <div class="row">
+          <div class="col d-flex justify-content-center">
+            ${tagList}
+          </div>      
+        </div>  
+        <hr>
+    </div>`;
 
-      <div class="row">
-        <div class="col d-flex justify-content-center">
-          <button class="btn btn-outline-info" id="tags">${listameli.tags[0]}</button>
-          <button class="btn btn-outline-info" id="tags">${listameli.tags[1]}</button>
-          <button class="btn btn-outline-info" id="tags">${listameli.tags[2]}</button>
-          <button class="btn btn-outline-info" id="tags">${listameli.tags[3]}</button>
-        </div>      
-      </div>  
-    </div>
-    <div><hr class="line"></hr></div>
-  </div>`;
+    cellist.push(item); //añade uno o más elementos al final de un array y devuelve la nueva longitud del array.
+  }
 
-  cellist.push(list); //añade uno o más elementos al final de un array y devuelve la nueva longitud del array.
+  return `<div>${cellist.join('')}</div>`;
 }
-document.querySelector('#app').innerHTML = `<ul>${cellist.join('')}</ul>`;//inyectando el html mediante javascript
-
-
-
