@@ -596,7 +596,11 @@ function getTags(tags) {
   return tagList.join('');
 }
 
-function getProductList(products) {
+
+
+function getProductList(products, searchPrice) {
+
+  const cellist = [];
   for (let i = 0; i < products.length; i++) {
     const product = products[i];
 
@@ -614,11 +618,8 @@ function getProductList(products) {
     }
 
 
-// Obtener el campo de búsqueda
-const searchInput = document.getElementById('busqueda');
-
 // Agregar un evento de escucha al campo de búsqueda
-searchInput.addEventListener('input', function() {
+/*  searchInput.addEventListener('input', function() {
   // Obtener el valor del campo de búsqueda
   const searchTerm = searchInput.value.toLowerCase();
 
@@ -636,7 +637,7 @@ searchInput.addEventListener('input', function() {
       item.style.display = 'none'; // Ocultar el elemento
     }
   }
-});
+}); */
   
 
     const priceWithoutDecimals = Math.floor(product.price); // Eliminar decimales del precio
@@ -674,9 +675,32 @@ searchInput.addEventListener('input', function() {
         </div>  
         <hr>
     </div>`;
-
-    cellist.push(item); //añade uno o más elementos al final de un array y devuelve la nueva longitud del array.
+    if(product.price < searchPrice){
+      cellist.push(item); //añade uno o más elementos al final de un array y devuelve la nueva longitud del array.
+    }
   }
-
   return `<div>${cellist.join('')}</div>`;
 }
+
+const price = 80000;
+// Obteniendo el elemento input del DOM
+const searchBar = document.getElementById('search-bar');
+
+function searchByPrice(event){
+  // "6000" -> 6000
+  const targetPrice = Number(event.target.value);
+  // recalcular la lista de productos con base en un nuevo precio
+  const productList= getProductList(items,  targetPrice); 
+
+  // Refrescar mi DOM
+  document.getElementById('app').innerHTML = productList
+}
+
+searchBar.addEventListener("keyup", searchByPrice);
+
+const productList=getProductList(items,  price);
+document.getElementById('app').innerHTML = productList;
+
+
+
+
