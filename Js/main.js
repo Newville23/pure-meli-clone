@@ -10,7 +10,7 @@ const items = [
       real_estate_agency: false,
       tags: [],
     },
-    price: 19609,
+    price: 49609,
     currency_id: 'ARS',
     available_quantity: 1,
     sold_quantity: 1,
@@ -392,7 +392,7 @@ const items = [
       real_estate_agency: false,
       tags: [],
     },
-    price: 17999,
+    price: 65999,
     currency_id: 'ARS',
     available_quantity: 100,
     sold_quantity: 0,
@@ -484,7 +484,7 @@ const items = [
       real_estate_agency: false,
       tags: [],
     },
-    price: 14899,
+    price: 34899,
     currency_id: 'ARS',
     available_quantity: 1,
     sold_quantity: 0,
@@ -596,7 +596,11 @@ function getTags(tags) {
   return tagList.join('');
 }
 
-function getProductList(products) {
+
+
+function getProductList(products, filter) {
+
+  const cellist = [];
   for (let i = 0; i < products.length; i++) {
     const product = products[i];
 
@@ -612,32 +616,6 @@ function getProductList(products) {
 
       tagList = getTags(product.tags);
     }
-
-
-// Obtener el campo de búsqueda
-const searchInput = document.getElementById('busqueda');
-
-// Agregar un evento de escucha al campo de búsqueda
-searchInput.addEventListener('input', function() {
-  // Obtener el valor del campo de búsqueda
-  const searchTerm = searchInput.value.toLowerCase();
-
-  // Obtener todos los elementos que deben ser filtrados
-  const items = document.getElementsByClassName('price');
-
-  // Recorrer los elementos y mostrar solo aquellos con precios mayores a 50.000
-  for (let k = 0; k < items.price.length; k++) {
-    const item = items[k];
-    const price = parseFloat(item.dataset.price);
-
-    if (price > 50000) {
-      item.style.display = 'block'; // Mostrar el elemento
-    } else {
-      item.style.display = 'none'; // Ocultar el elemento
-    }
-  }
-});
-  
 
     const priceWithoutDecimals = Math.floor(product.price); // Eliminar decimales del precio
     const formattedPrice = priceWithoutDecimals.toLocaleString('es-CO', {
@@ -675,8 +653,101 @@ searchInput.addEventListener('input', function() {
         <hr>
     </div>`;
 
-    cellist.push(item); //añade uno o más elementos al final de un array y devuelve la nueva longitud del array.
-  }
 
+    // Aplicar logica de filtrado a los items o productos  
+    // LOGICAL OPERATORS - && "y" || "o"
+
+    if(filter) {
+      if(product.price > filter.price.min  && product.price < filter.price.max){
+        cellist.push(item); //añade uno o más elementos al final de un array y devuelve la nueva longitud del array.
+      }
+    }else {
+      cellist.push(item);
+    }
+ 
+  }
   return `<div>${cellist.join('')}</div>`;
 }
+
+
+// Obteniendo el elemento input del DOM
+const searchBar = document.getElementById('search-bar');
+
+function searchByPrice(event){
+  // "6000" -> 6000
+  const targetPrice = Number(event.target.value);
+  // recalcular la lista de productos con base en un max-min precio
+  const productList= getProductList(items,  targetPrice); 
+
+  // Refrescar mi DOM
+  document.getElementById('app').innerHTML = productList
+}
+
+searchBar.addEventListener("keyup", searchByPrice);
+
+
+
+
+function filter() {
+  // Creando un objeto que describe un filtro de prductos
+
+  // 1. Capturar los valores de los inputs max-min
+  const maxPrice = Number(document.getElementsByName("maxPrice")[0].value);
+  const minPrice = Number(document.getElementsByName("minPrice")[0].value);
+
+  // 2. Creando estructura de filtro
+  const filter = {
+    price: {
+      min: minPrice,
+      max: maxPrice
+    }
+  }
+
+  // 3. llamando la fn para actualizar lista de productos según el filtro 
+  const filteredProduct = getProductList(items, filter);
+
+  document.getElementById('products').innerHTML = filteredProduct;
+  console.log("filtrando...");
+  
+}
+
+const homeLayout = `
+<div class="container d-flex justify-content-between">
+  <div class="sidebar">
+    <h1> Filtros </h1>
+
+    <div class="filter-card">
+
+      <div class="form-input d-flex flex-column">
+        <label for="maxPrice">Precio Maximo</label>
+        <input name="maxPrice" value="50000"/>
+      </div>
+
+      <div class="form-input d-flex flex-column">
+        <label for="minPrice">Precio Minimo</label>
+        <input name="minPrice" value="100"/>
+      </div>
+
+      <input value="Filtrar" type="submit" id="btn-filter" class="btn btn-primary mt-2"/>
+    
+    </div>
+  </div>
+
+  <div id="products" class='products'>
+    ${getProductList(items)}
+  </div>
+</div>
+`
+
+
+  // Aqui que tenga que ver con un elemento en homeLayout voy a tener un error
+  document.getElementById('app').innerHTML = homeLayout;
+
+
+
+
+  const btnFilter = document.getElementById('btn-filter');
+  btnFilter.addEventListener("click", filter);
+
+
+

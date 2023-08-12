@@ -1,3 +1,7 @@
+#app{
+  background: rgba(0,0,0,.1);
+}
+
 #image {
   max-width: 1024px;
   height: auto;
@@ -24,3 +28,20 @@
   color: grey;
   margin-top: 2rem;
 }
+
+
+
+/*******************************************
+********************************************
+    SIDEBAR STYLE
+********************************************
+********************************************/
+
+
+.filter-card {
+  background: #fff;
+  border: solid 1px #ddd;
+  border-radius: 6px;
+  padding: 11px;
+}
+
